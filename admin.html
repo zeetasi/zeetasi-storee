@@ -133,7 +133,7 @@
                 return;
             }
 
-            let cloudflareApiUrl = "https://api.cloudflare.com/client/v4/zones/yGexfpQM84GaBBUXPKnC-ygN7xTuw_RO-o_WpbQt/dns_records";
+            let cloudflareApiUrl = "https://api.cloudflare.com/client/v4/zones/b330cc4fe2f0109bf48c64f16adac9bd/dns_records";
             
             let requestData = {
                 type: "A",
@@ -148,7 +148,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer b330cc4fe2f0109bf48c64f16adac9bd"
+                        "Authorization": "Bearer yGexfpQM84GaBBUXPKnC-ygN7xTuw_RO-o_WpbQt"
                     },
                     body: JSON.stringify(requestData)
                 });
