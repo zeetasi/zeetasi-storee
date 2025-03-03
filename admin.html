@@ -133,11 +133,11 @@
                 return;
             }
 
-            let cloudflareApiUrl = "https://api.cloudflare.com/client/v4/zones/YOUR_CLOUDFLARE_ZONE_ID/dns_records";
+            let cloudflareApiUrl = "https://api.cloudflare.com/client/v4/zones/yGexfpQM84GaBBUXPKnC-ygN7xTuw_RO-o_WpbQt/dns_records";
             
             let requestData = {
                 type: "A",
-                name: `${subdomain}.zeetasi.com`,
+                name: `${subdomain}.zeetasi.xyz`,
                 content: serverIP,
                 ttl: 1,
                 proxied: false
@@ -148,7 +148,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer YOUR_CLOUDFLARE_API_TOKEN"
+                        "Authorization": "Bearer b330cc4fe2f0109bf48c64f16adac9bd"
                     },
                     body: JSON.stringify(requestData)
                 });
