@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Zeetasi Store</title>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://deposit.pictures/media/images/f9/e4/79/f9e4795e8a924045aabba7a33792cabe.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background-color: rgba(43, 43, 43, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeIn 1s ease-in-out forwards, scaleUp 1s ease-in-out forwards;
+        }
+
+        h1 {
+            animation: fadeIn 1.5s ease-in-out;
+            color: #4CAF50;
+        }
+
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        input:focus {
+            transform: scale(1.1);
+        }
+
+        button {
+            background-color: #25D366;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1b9e5f;
+        }
+
+        button:active {
+            transform: scale(1.2);
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .whatsapp-button {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: red;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .subdomain-list {
+            margin-top: 20px;
+            padding: 10px;
+            background: #3a3a3a;
+            border-radius: 5px;
+            list-style-type: none;
+        }
+
+        .subdomain-list li {
+            margin: 5px 0;
+            padding: 5px;
+            background: #4CAF50;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Admin Panel - Zeetasi Store</h1>
+        <p>Buat subdomain untuk pelanggan.</p>
+        
+        <input type="text" id="subdomain" placeholder="Masukkan nama subdomain" required>
+        <input type="text" id="server-ip" placeholder="Masukkan IP Server" required>
+        <button onclick="createSubdomain()">Buat Subdomain</button>
+
+        <p id="result"></p>
+        <h3>Subdomain yang berhasil dibuat:</h3>
+        <ul id="subdomain-list" class="subdomain-list"></ul>
+
+        <a id="whatsapp-link" class="whatsapp-button" href="#" target="_blank">Laporkan ke WhatsApp</a>
+    </div>
+
+    <script>
+        async function createSubdomain() {
+            let subdomain = document.getElementById("subdomain").value;
+            let serverIP = document.getElementById("server-ip").value;
+            let resultElement = document.getElementById("result");
+            let listElement = document.getElementById("subdomain-list");
+            let whatsappButton = document.getElementById("whatsapp-link");
+
+            if (!subdomain || !serverIP) {
+                resultElement.style.color = "red";
+                resultElement.innerText = "⚠️ Subdomain dan IP Server tidak boleh kosong!";
+                return;
+            }
+
+            let cloudflareApiUrl = "https://api.cloudflare.com/client/v4/zones/YOUR_CLOUDFLARE_ZONE_ID/dns_records";
+            
+            let requestData = {
+                type: "A",
+                name: `${subdomain}.zeetasi.com`,
+                content: serverIP,
+                ttl: 1,
+                proxied: false
+            };
+
+            try {
+                let response = await fetch(cloudflareApiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer YOUR_CLOUDFLARE_API_TOKEN"
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                let data = await response.json();
+
+                if (data.success) {
+                    resultElement.style.color = "green";
+                    resultElement.innerText = `✅ Subdomain berhasil dibuat: ${subdomain}.zeetasi.com`;
+
+                    let listItem = document.createElement("li");
+                    listItem.innerText = `${subdomain}.zeetasi.com (IP: ${serverIP})`;
+                    listElement.appendChild(listItem);
+
+                    whatsappButton.style.display = "none";
+                } else {
+                    resultElement.style.color = "red";
+                    resultElement.innerText = `❌ Gagal membuat subdomain: ${data.errors[0].message}`;
+
+                    let encodedMessage = encodeURIComponent(`Bang ini gagal buat subdomain: ${subdomain} (IP: ${serverIP})`);
+                    whatsappButton.href = `https://wa.me/6285762554515?text=${encodedMessage}`;
+                    whatsappButton.style.display = "inline-block";
+                }
+            } catch (error) {
+                resultElement.style.color = "red";
+                resultElement.innerText = "❌ Gagal membuat subdomain, periksa API Token dan Zone ID!";
+
+                let encodedMessage = encodeURIComponent(`Bang ini gagal buat subdomain: ${subdomain} (IP: ${serverIP})`);
+                whatsappButton.href = `https://wa.me/6285762554515?text=${encodedMessage}`;
+                whatsappButton.style.display = "inline-block";
+            }
+        }
+    </script>
+
+</body>
+</html>

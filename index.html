@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Zeetasi Store</title>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://deposit.pictures/media/images/f9/e4/79/f9e4795e8a924045aabba7a33792cabe.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: limegreen;
+            z-index: 9999;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background-color: rgba(43, 43, 43, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeIn 1s ease-in-out forwards, scaleUp 1s ease-in-out forwards;
+            display: none;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        input:focus {
+            transform: scale(1.1);
+        }
+
+        button {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button:active {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Halaman Verifikasi Browser -->
+    <div class="loading-screen" id="loading-screen">
+        Memverifikasi browser...
+    </div>
+
+    <!-- Form Registrasi/Login -->
+    <div class="container" id="form-container">
+        <h1 id="title">Registrasi Zeetasi Store</h1>
+        <form onsubmit="return registerUser()">
+            <input type="text" id="username" placeholder="Masukkan Nama Anda" required>
+            <input type="password" id="password" placeholder="Masukkan Password" required>
+            <button type="submit">Masuk</button>
+        </form>
+    </div>
+
+    <script>
+        // Tampilkan loading screen selama 2 detik sebelum form muncul
+        setTimeout(() => {
+            document.getElementById("loading-screen").style.display = "none";
+            document.getElementById("form-container").style.display = "block";
+        }, 2000);
+
+        function registerUser() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            
+            if (username && password) {
+                localStorage.setItem("username", username);
+                localStorage.setItem("password", password);
+
+                if (username === "admin" && password === "1") {
+                    window.location.href = "admin.html"; // Jika admin, masuk ke admin panel
+                } else {
+                    window.location.href = "store.html"; // Jika user biasa, masuk ke store
+                }
+                return false;
+            } else {
+                alert("Harap isi semua kolom!");
+                return false;
+            }
+        }
+    </script>
+
+</body>
+</html>
